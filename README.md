@@ -1,5 +1,5 @@
 # BARCODE SCANNER SDK FOR ANDROID
-The SDK provides developers with a set of tools to set the scanner for android platform. 
+The SDK provides developers with a set of tools to set the scanner for android platform. Support Android API level 31 and above.
 
 ## Configuration
 To use a library in your project, there are generally the following steps:
