@@ -11,5 +11,5 @@ To use a library in your project, there are generally the following steps:
 6. Add bluetooth permissions in the "AndroidManifest.xml";
 
 ## Documentation
-For more information about the SDK and APIs, go to [http://docs.inateckoffice.com/web/#/8/24](http://docs.inateckoffice.com/web/#/8/24) .
+For more information about the SDK and APIs, go to [https://docs.inateck.com/scanner-api/](https://docs.inateck.com/scanner-api/) .
 
