@@ -4,7 +4,6 @@ package com.example.mybleapp
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -14,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.android_sdk.R
-import com.inateck.RustJNI
+import com.inateck.ScannerJNI
+import org.json.JSONArray
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private var isBleConnectPermissionGranted = false
     private var isBleFineLocationPermissionGranted = false
     private var isBleCoarseLocationPermissionGranted = false
+    private var isBleBackgroundLocationPermissionGranted = false
+
 
 
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             isBleConnectPermissionGranted = permissons[Manifest.permission.BLUETOOTH_CONNECT] ?: isBleConnectPermissionGranted
             isBleFineLocationPermissionGranted = permissons[Manifest.permission.ACCESS_FINE_LOCATION] ?: isBleFineLocationPermissionGranted
             isBleCoarseLocationPermissionGranted = permissons[Manifest.permission.ACCESS_COARSE_LOCATION] ?: isBleCoarseLocationPermissionGranted
+            isBleBackgroundLocationPermissionGranted =  permissons[Manifest.permission.ACCESS_BACKGROUND_LOCATION] ?: isBleBackgroundLocationPermissionGranted
         }
 
         requestPermission()
@@ -75,30 +78,22 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.BLUETOOTH_SCAN
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                return@setOnClickListener;
+               // return@setOnClickListener;
             }
-            var jni = RustJNI()
+            var jni = ScannerJNI()
             var devices = jni.scan();   // Calling Rust library method to start scanning for bluetooth device
-            Toast.makeText(this, devices, Toast.LENGTH_LONG).show()
 
             val countLabel: TextView = findViewById<TextView>(R.id.countLabel)
-
-            var deviceId = "***"
-            var result: String = jni.connect(deviceId,"*","*","*")
-            Toast.makeText(this, result, Toast.LENGTH_LONG).show()
-
-            var cacheRs = jni.getBasicProperties(deviceId,"cache")
-            Toast.makeText(this, cacheRs, Toast.LENGTH_LONG).show()
-
-
-            var ligthRs = jni.editPropertiesInfo(deviceId,"lighting_lamp_control","01")
-            Toast.makeText(this, ligthRs, Toast.LENGTH_LONG).show()
-
-
             if (devices != "") {
+                Log.e("devices",devices)
+                val jsonArray = JSONArray(devices)
+                val deviceList = mutableListOf<String>()
 
-                val deviceList = devices.split("|")
-                deviceList[0].trim()
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val deviceId = jsonObject.getString("device_id")
+                    deviceList.add("$deviceId")
+                }
 
                 countLabel.text = "Found "+ deviceList.size + " Devices. Click to Pair."
 
@@ -108,8 +103,16 @@ class MainActivity : AppCompatActivity() {
 
                 listView.setOnItemClickListener { parent, _, position, _ ->
                     val selectedItem = parent.getItemAtPosition(position) as String
+
                     var result: String = jni.connect(selectedItem,"*","*","*")
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show()
+                    Log.println(Log.DEBUG, "connect",result)
+
+                    var cacheRs = jni.getBasicProperties(selectedItem,"firmware_version")
+                    Log.println(Log.DEBUG, "firmware_version",cacheRs)
+
+                    var lightRs = jni.editPropertiesInfoByKey(selectedItem,"lighting_lamp_control","01")
+                    Log.println(Log.DEBUG, "ligthRs",lightRs)
                 }
             }
             else {
@@ -158,6 +161,12 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.BLUETOOTH_ADMIN
         ) == PackageManager.PERMISSION_GRANTED
 
+        isBleBackgroundLocationPermissionGranted =  ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+
         val permissionRequest : MutableList<String> = ArrayList()
 
         if (!isBlePermissionGranted) {
@@ -186,6 +195,10 @@ class MainActivity : AppCompatActivity() {
 
         if (!isBleAdminPermissionGranted) {
             permissionRequest.add((Manifest.permission.BLUETOOTH_ADMIN))
+        }
+
+        if (!isBleBackgroundLocationPermissionGranted){
+            permissionRequest.add((Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         }
         if (permissionRequest.isNotEmpty()) {
             permissionLauncher.launch(permissionRequest.toTypedArray())
