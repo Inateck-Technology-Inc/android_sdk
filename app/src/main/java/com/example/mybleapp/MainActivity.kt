@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
 
                 listView.setOnItemClickListener { parent, _, position, _ ->
                     val selectedItem = parent.getItemAtPosition(position) as String
-
                     var result: String = jni.connect(selectedItem,"*","*","*")
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show()
                     Log.println(Log.DEBUG, "connect",result)
@@ -111,8 +110,17 @@ class MainActivity : AppCompatActivity() {
                     var cacheRs = jni.getBasicProperties(selectedItem,"firmware_version")
                     Log.println(Log.DEBUG, "firmware_version",cacheRs)
 
+                    var lighting_lamp = jni.getPropertiesInfoByKey(selectedItem,"lighting_lamp_control")
+                    Log.println(Log.DEBUG, "lighting_lamp",lighting_lamp)
+
                     var lightRs = jni.editPropertiesInfoByKey(selectedItem,"lighting_lamp_control","01")
                     Log.println(Log.DEBUG, "ligthRs",lightRs)
+
+                    var barcodes = jni.getAllBarcodeProperties(selectedItem)
+                    Log.println(Log.DEBUG, "barcodes",barcodes)
+
+                    var disconnect = jni.disconnect(selectedItem)
+                    Log.println(Log.DEBUG, "disconnect",disconnect)
                 }
             }
             else {

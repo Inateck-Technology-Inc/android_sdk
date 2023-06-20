@@ -15,6 +15,8 @@ package com.inateck
 
      external fun getAllBarcodeProperties(deviceId: String): String
 
+     external fun disconnect(deviceId: String): String
+
     init {
         System.loadLibrary("inateck_scanner")
         init()
