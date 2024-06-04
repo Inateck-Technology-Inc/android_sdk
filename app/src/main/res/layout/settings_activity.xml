@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".DeviceDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,40 +20,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Devices"
+                android:text="Device Details"
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
             <Button
-                android:id="@+id/button_scan"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="scan"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button_stop"
+                android:id="@+id/button_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="Stop"
+                android:text="Back"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="end"
-                android:indeterminate="true"
-                android:visibility="gone"
-                 />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
