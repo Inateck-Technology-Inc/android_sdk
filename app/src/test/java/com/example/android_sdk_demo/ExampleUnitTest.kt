@@ -1,4 +1,4 @@
-package com.example.android_sdk
+package com.example.android_sdk_demo
 
 import org.junit.Test
 

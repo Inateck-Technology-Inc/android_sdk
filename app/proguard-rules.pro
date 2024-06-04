@@ -19,8 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-#btleplug resources
--keep class com.nonpolynomial.** { *; }
--keep class com.example.** { *; }
--keep class io.github.gedgygedgy.** { *; }
--keep class com.inateck.ScannerJNI { *; }

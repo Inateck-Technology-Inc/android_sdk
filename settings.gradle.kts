@@ -10,11 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
-        flatDir{
-            dirs "$rootDir/libs"
-        }
+        maven { url = uri("https://jitpack.io") }
     }
 }
-rootProject.name = "android_sdk"
-include ':app'
+
+rootProject.name = "android_sdk_demo"
+include(":app")
